@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <errno.h>
 #include <limits.h>
 
 #include "qnum.h"
@@ -10,17 +11,19 @@ static int ctoi(register char c)
 		return c - '0';
 	if ('a' <= c && c <= 'z')
 		return c - 'a' + 10;
-	return ((unsigned) ~0) >> 1;
+	return INT_MAX;
 }
 
 /* Convert string s in base b to fraction. */
 qnum btoq(const char *s, int b)
 {
-	int sign, dot, i;
+	int sign, dot, i = INT_MAX;
 	qnum n = {0, 1};
 
-	if (!(2 <= b && b <= 36))
+	if (!(2 <= b && b <= 36)) {
+		errno = EINVAL;
 		return n;
+	}
 
 	while (*s == ' ' || *s == '\t')
 		++s;
@@ -34,8 +37,10 @@ qnum btoq(const char *s, int b)
 			dot = 1;
 			continue;
 		}
-		if (n.num >= LONG_MAX / b)
+		if (n.num >= LONG_MAX / b) {
+			errno = ERANGE;
 			break;
+		}
 		if ((i = ctoi(*s)) >= b)
 			break;
 		n.num = n.num * b + i;
@@ -46,6 +51,9 @@ qnum btoq(const char *s, int b)
 			qnum_reduce(&n);
 		}
 	}
+
+	if (i == INT_MAX)
+		errno = EINVAL;
 
 	n.num = n.num * sign;
 

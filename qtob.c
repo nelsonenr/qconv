@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <errno.h>
 #include <limits.h>
 
 #include "qnum.h"
@@ -23,9 +24,12 @@ const char *qtob(qnum n, int b)
 	long ip;
 	char *s = endc, *t = buf;
 
-	if (!(2 <= b && b <= 36))
+	if (!(2 <= b && b <= 36) || n.den == 0) {
+		errno = EINVAL;
 		return (char *) 0;
+	}
 
+	qnum_reduce(&n);
 	if ((neg = n.num < 0))
 		n.num = -n.num;
 
@@ -47,6 +51,8 @@ const char *qtob(qnum n, int b)
 			qnum_reduce(&n);
 			*t++ = itoc((n.num / n.den) % b);
 		} while (n.den > 1 && n.num < LONG_MAX / b && t < endc);
+		if (n.num > 1)
+			errno = ERANGE;
 	}
 
 	*t = '\0';
