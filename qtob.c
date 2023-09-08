@@ -23,6 +23,9 @@ const char *qtob(qnum n, int b)
 	long ip;
 	char *s = endc, *t = buf;
 
+	if (!(2 <= b && b <= 36))
+		return (char *) 0;
+
 	if ((neg = n.num < 0))
 		n.num = -n.num;
 

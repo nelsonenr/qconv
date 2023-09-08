@@ -19,6 +19,9 @@ qnum btoq(const char *s, int b)
 	int sign, dot, i;
 	qnum n = {0, 1};
 
+	if (!(2 <= b && b <= 36))
+		return n;
+
 	while (*s == ' ' || *s == '\t')
 		++s;
 
