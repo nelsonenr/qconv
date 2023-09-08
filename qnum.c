@@ -1,3 +1,4 @@
+/* See LICENSE file for copyright and license details. */
 #include <stdlib.h>
 
 #include "qnum.h"
@@ -14,6 +15,7 @@ static long gcd(long a, long b)
 	return a;
 }
 
+/* Reduce fraction q to lowest terms. */
 void qnum_reduce(qnum *q)
 {
 	long d = labs(gcd(q->num, q->den));

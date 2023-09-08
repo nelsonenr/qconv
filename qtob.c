@@ -1,3 +1,4 @@
+/* See LICENSE file for copyright and license details. */
 #include <limits.h>
 
 #include "qnum.h"
@@ -5,6 +6,7 @@
 static char buf[72];
 static char *endc = buf + sizeof(buf) - 1;
 
+/* Convert integer i to character. */
 static char itoc(register int i)
 {
 	if (0 <= i && i <= 9)
@@ -14,6 +16,7 @@ static char itoc(register int i)
 	return '\0';
 }
 
+/* Convert fraction n to string in base b. */
 const char *qtob(qnum n, int b)
 {
 	int neg;

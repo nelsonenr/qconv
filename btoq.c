@@ -1,7 +1,9 @@
+/* See LICENSE file for copyright and license details. */
 #include <limits.h>
 
 #include "qnum.h"
 
+/* Convert character c to integer. */
 static int ctoi(register char c)
 {
 	if ('0' <= c && c <= '9')
@@ -11,6 +13,7 @@ static int ctoi(register char c)
 	return ((unsigned) ~0) >> 1;
 }
 
+/* Convert string s in base b to fraction. */
 qnum btoq(const char *s, int b)
 {
 	int sign, dot, i;
