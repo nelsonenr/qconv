@@ -48,13 +48,13 @@ qnum btoq(const char *s, int b)
 			if (n.den >= LONG_MAX / b)
 				break;
 			n.den = n.den * b;
-			qnum_reduce(&n);
 		}
 	}
 
 	if (i == INT_MAX)
 		errno = EINVAL;
 
+	qnum_reduce(&n);
 	n.num = n.num * sign;
 
 	return n;
